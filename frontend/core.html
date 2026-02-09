@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project K.I.R.A</title>
+    <link rel="stylesheet" href="stylesheets/style.css"/>
+</head>
+<body>
+
+    <div class="mission"></div>
+
+    <div id="auth-container" class="card">
+        <h1>Project K.I.R.A</h1>
+        
+        <h2 id="auth-tiltle">Entrar</h2>
+
+        <!-- Authentication Inputs -->
+        <input type="email" id="auth-email" placeholder="Seu E-mail" style="width: 90%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: none;"/>
+        <input type="password" id="auth-password" placeholder="Sua Senha" style="width: 90%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: none;"/>
+
+        <!-- Authentication Buttons -->
+        <button id="btn-login" onclick="handleAuth('login')">LogIn</button>
+
+        <button id="btn-register" onclick="handleAuth('signup')">Registrar</button>
+
+        <p id="auth-msg" style="font-size: 0.8rem; margin-top: 10px;"></p>
+    </div>
+    <div id="game-container" class="card" style="display: none;">
+        <h1>Project K.I.R.A</h1>
+
+        <div class="stats">🪙 <span id="balance">0</span> K.I.R.A Coins</div>
+
+        <div class="mission-box">
+            <button id="btn-mission" onclick="startMission()">Começar Missão</button>
+
+            <p id="status-msg">Pronto para Começar?</p>
+        </div>
+
+        <div class="log" id="log">Logs de Missão: Olá Viajante!</div>
+
+        <button onclick="resetGame()" style="margin-top: 20px; background-color: #c0392b; font-size: 0.7rem; padding: 5px">Resetar Save</button>
+    </div>
+
+    <script src="src/core.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        const supabaseUrl = ; // Your Supabase URL
+        const supabaseKey = ; // Your supabaseKey
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+        async function handleAuth(type) {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            const msg = document.getElementById('auth-msg');
+
+            msg.innerText = 'Processando...';
+
+            let result;
+            if (type === 'signup') {
+                result = await supabaseClient.auth.signUp({ email, password });
+            } else {
+                result = await supabaseClient.auth.signInWithPassword({ email, password });
+            }
+
+            if (result.error) {
+                msg.innerText = `Erro: ${result.error.message}`;
+                msg.style.color = 'red';
+            } else {
+                msg.innerText = 'Sucesso! Logando...';
+                msg.style.color = 'green';
+
+                setTimeout(() => iniciarJogo(result.data.user), 360);
+            }
+        }
+
+        async function iniciarJogo(user) {
+            // esconde o Login/Registro e mostra o jogo
+            document.getElementById('auth-container').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
+            
+            // Carrega os coins do banco de dados (tabela "users", coluna "kiracoins")
+            const { data, error } = await supabaseClient.from('users').select('kiracoins').eq('id', user.id).single();
+            if (data) {
+                kiracoins = data.kiracoins;
+                updateDisplay();
+            }
+        }
+    </script>
+
+</body>
+</html>
