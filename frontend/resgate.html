@@ -3,10 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Oráculo de Cupons</title>
     <link rel="stylesheet" href="stylesheets/style.css"/>
 </head>
 <body>
+    <div class="cupons-box" style="border-color: #9b59b6;">
+        <h3>🔮 Oráculo de Cupons</h3>
+        <p>Recebeu um código no Instagram? Digite aqui:</p>
+        <input type="text" id="cupom-input" placeholder="Ex: RUNAS" style="width: 70%; padding: 8px;">
+        <button onclick="resgatarCupom()" style="width: 25%;">Validar</button>
+    </div>
     
+    <script>
+        async function resgatarCupom() {
+            const code = document.getElementById('cupom-input').value.trim().toUpperCase();
+            const { data: cupom, error: erroCupom} = await supabase.from('cupons').select('*').eq('codigo', codigo).eq('active', true).single();
+
+            if (!cupom) {
+                alert("Cupom inválido ou expirado.");
+                return;
+            }
+
+            const { data: uso} = await supabase.from('user_cupons').select('*').eq('codigo_cupom', cupom.id).eq('user_id', supabase.auth.user().id).single();
+
+            if (uso) {
+                alert("Você já resgatou este cupom.");
+                return;
+            }
+
+            await supabase.from('user_cupons').insert({
+                user_id: supabase.auth.user().id,
+                codigo_cupom: code
+            });
+
+            const novoSaldo = kiracoins + cupom.premio;
+
+            await supabase.from('users').update('balance', novoSaldo).eq('id', supabase.auth.user().id);
+            kiracoins = novoSaldo;
+            updateDisplay();
+            alert(`Parabéns! Você ganhou +${cupom.premio} KiraCoins!`);
+            addLog(`🎫 Cupom ${code} Resgatado!`)
+        }
+
+    </script>
 </body>
 </html>

@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resgatando RUNAS...</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="stylesheets/style.css"/>
 </head>
 <body>
@@ -13,6 +12,8 @@
         <p id="status">Aguarde um momento.</p>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <script>
         const supabase = supabase.createClient(
             import.meta.env.SUPABASE_URL,
