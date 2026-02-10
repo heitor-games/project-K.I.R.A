@@ -58,22 +58,11 @@ function iniciarContagemRegressiva(recompensa, tempo) {
 }
 
 function startMission() {
-    const reward = Math.floor(Math.random() * 10) + 1; // Recompensa aleatória entre 1 e 100
-    const duration = 5;
-
     btnMission.disabled = true;
-    statusMsg.innerText = 'Missão em andamento...';
+    statusMsg.innerText = 'Redirecionando...';
 
-    let timeLeft = duration;
-    const timer = setInterval(() => {
-        timeLeft--;
-        btnMission.innerText = `A Missão Acaba em: (${timeLeft}s)`;
+    window.location.assign('https://www.instagram.com/kira.altwear');
 
-        if (timeLeft <= 0) {
-            clearInterval(timer);
-            completemission(reward);
-        }
-    }, 1000);
 }
 
 function completemission(reward) {
@@ -94,14 +83,5 @@ function completemission(reward) {
                 updateDisplay();
             }
         }, 500);
-    }
-}
-
-function resetGame() {
-    if (confirm('Tem certeza que deseja resetar seu progresso?')) {
-        kiracoins = 0;
-        localStorage.clear();
-        updateDisplay();
-        addLog('Progresso resetado. Bem-vindo de volta, Viajante!');
     }
 }
