@@ -16,7 +16,7 @@ async function encomendarProduto(produto) {
         //2. cria registro na tabela 'orders' com status 'pendente'
         const {data, error} = await supabase.from('orders').insert({
             user_id: user.id,
-            item_name: produto.id,
+            item_name: produto.nome,
             address: endereco,
             status: 'pendente'
         });
@@ -33,10 +33,10 @@ async function encomendarProduto(produto) {
 
 function renderizarLoja() {
     const shopContainer = document.getElementById('shop-items');
-    shopContainer.innerHTML = '';
+    shopContainer.innerText = PRODUTOS_REAIS;
 
     PRODUTOS_REAIS.forEach(produto => {
-        const jaComprou = false; // Aqui você pode implementar lógica para verificar se o usuário já comprou o item
+        const jaComprou = true; // Aqui você pode implementar lógica para verificar se o usuário já comprou o item
         const btn = document.createElement('button');
         btn.innerHTML = `${produto.nome} (${produto.preco} K.I.R.A Coins)<br><small>${produto.descricao}</small>`;
         btn.disabled = kiracoins < produto.preco || jaComprou;
@@ -46,6 +46,7 @@ function renderizarLoja() {
         }
 
         shopContainer.appendChild(btn);
+        shopContainer.appendChild(document.createElement('li', PRODUTOS_REAIS.list()));
     });
 }
 async function atualizarKiraCoins() {

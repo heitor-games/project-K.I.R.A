@@ -59,9 +59,8 @@ function iniciarContagemRegressiva(recompensa, tempo) {
 
 function startMission() {
     btnMission.disabled = true;
-    statusMsg.innerText = 'Redirecionando...';
-
-    window.location.assign('https://www.instagram.com/kira.altwear');
+    statusMsg.innerText = 'Missão Iniciada! Boa sorte!';
+    BuscarMissaoDaIa();
 
 }
 

@@ -16,7 +16,7 @@ app.get('/gerar-missao', async (req, res) => {
         const prompt = `Você é um mestre de RPG. Gere algumas missões curtas para um jogo parecido com dabloons. Responda apenas em JSON com os campos: 'titulo', descricao', recompensa' (entre 0 e 20) e 'tempo_segundos' (entre 30 e 120 segundos). O jogo vai ser implementado em uma loja de moda alternativa, faça as missões relacionadas à essa loja`;
 
         const result = await model.generateContent(prompt);
-        const response = await result.response();
+        const response = await result.response;
         const text = response.text();
 
         const clearJson = text.replace(/```json/g, '').replace(/```/g, '');

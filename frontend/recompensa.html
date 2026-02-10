@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resgatando RUNAS...</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="stylesheets/style.css"/>
+</head>
+<body>
+    <div style="text-align: center; margin-top: 50px; font-family: sans-serif;">
+        <h2>🔄 Validando sua presença...</h2>
+        <p id="status">Aguarde um momento.</p>
+    </div>
+
+    <script>
+        const supabase = supabase.createClient(
+            import.meta.env.SUPABASE_URL,
+            import.meta.env.SUPABASE_KEY
+        );
+
+        async function resgatarRecompensa() {
+            const { data: {session} } = await supabase.auth.getSession();
+            
+            if (!session) {
+                alert("Você precisa estar logado para resgatar recompensas.");
+                window.location.href = "core.html";
+                return;
+            }
+
+            const userId = session.user.id;
+            const valorRecompensa = 100; // Valor base da recompensa em KiraCoins
+
+            const { data: user } = await supabase.from('users')
+                .select('last_store_reward', 'balance')
+                .eq('id', userId)
+                .single();
+
+            const agora = new Date();
+            const ultimoResgate = user.last_store_reward ? new Date(user.last_store_reward) : null;
+            const umDia = 24 * 60 * 60 * 1000;
+
+            if (!ultimoResgate || (agora - ultimoResgate) >= umDia) {
+                await supabase.from('users')
+                    .update({
+                        balance: user.balance + valorRecompensa,
+                        last_store_reward: agora.toISOString()
+                    })
+                    .eq('id', userId);
+
+                document.getElementById('status').innerText = `Sucesso! Você recebeu +${valorRecompensa} KiraCoins. Volte amanhã para mais!`;
+                alert(`Parabéns! Você ganhou +${valorRecompensa} KiraCoins. Volte amanhã para mais recompensas!`);
+
+                setTimeout(() => {
+                    window.location.href = "core.html";
+                }, 3000);
+            } else {
+                const proximoResgate = new Date(ultimoResgate.getTime() + umDia);
+                const tempoRestante = Math.ceil((proximoResgate - agora) / (60 * 1000));
+                alert(`Você já resgatou sua recompensa hoje. Tente novamente em ${tempoRestante} minutos.`);
+            }
+        }
+
+        resgatarRecompensa();
+
+    </script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +8,11 @@
 </head>
 <body>
 
-    <div class="mission-box" style="border-color: #f1c50f; margin-top: 20px;">
-        <h3>🏪 Loja K.I.R.A</h3>
+    <div class="store-box" style="border-color: #f1c50f; margin-top: 20px;">
+        <h3><a href="./loja.html">Loja K.I.R.A</a></h3>
         <p>Gaste seus KiraCoins em itens Físicos</p>
 
-        <div id="shop-items" style="display: grid; gap: 10px"></div>
+        <div id="shop-items" style="display: grid; gap: 10px">Itens Disponíveis:</div>
     </div>
 
     <div id="inventory-section" style="margin-top: 15px; font-size: 0.8rem; color: #aaa;">
@@ -41,8 +41,12 @@
         <div class="stats">🪙 <span id="balance">0</span> K.I.R.A Coins</div>
 
         <div class="mission-box">
-            <button id="btn-mission" onclick="startMission()">Nosso Intagram</button>
+            <button id="btn-mission" onclick="startMission()">Gerar Missão</button>
 
+            <div class="mission-box">
+                <h3>Missão</h3>
+                <p>Descricão</p>
+            </div>
             <p id="status-msg">Pronto para Começar?</p>
         </div>
 
